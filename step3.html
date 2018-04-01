@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <!-- Required meta tags -->
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+
+    <!-- Bootstrap CSS -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm"
+        crossorigin="anonymous">
+
+    <!-- Custom CSS -->
+    <link rel="stylesheet" href="/theme.css">
+
+    <!-- Fontawesome -->
+    <script defer src="https://use.fontawesome.com/releases/v5.0.9/js/all.js" integrity="sha384-8iPTk2s/jMVj81dnzb/iFR2sdA7u06vHJyyLlAd4snFpCl/SnyUjRrbdJsw1pGIl"
+        crossorigin="anonymous"></script>
+
+    <title>Server Options | Ninja</title>
+
+</head>
+
+<body>
+
+    <div class="container">
+
+        <div class="ninjabox mt-4">
+
+            <header class="ninjabox-header">
+
+                <h2>Create a New Server</h2>
+
+                <div class="progress mt-3">
+                    <div class="progress-bar progress-bar-striped bg-success" role="progressbar" style="width: 50%" aria-valuenow="50" aria-valuemin="0"
+                        aria-valuemax="100"></div>
+                </div>
+
+            </header>
+
+            <div class="ninjabox-body">
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="az-naming-prefix">Azure Naming Prefix</label>
+                            <input id="az-naming-prefix" name="az-naming-prefix" type="text" class="form-control" placeholder="rock-mychurch">
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="az-location">Server Location</label>
+                            <select id="az-location" name="az-location" class="custom-select">
+                                <option value="1" selected>East USs</option>
+                                <option value="2">East US 2</option>
+                                <option value="3">Central US</option>
+                                <option value="4">North Central US</option>
+                                <option value="5">South Central US</option>
+                                <option value="6">West Central US</option>
+                                <option value="7">West US</option>
+                                <option value="8">West US 2</option>
+                            </select>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="row">
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="az-rock-size">Server Size</label>
+                            <select id="az-rock-size" name="az-rock-size" class="custom-select">
+                                <option value="1">Tiny (Less than 100 members) - About $40/month</option>
+                                <option value="2" selected>Small (100 - 500 members) - About $100/month</option>
+                                <option value="3">Medium (500 - 1,000 members) - About $200/month</option>
+                                <option value="4">Large (1,000 - 5,000 members) - About $500/month</option>
+                                <option value="5">Huge (Over 5,000 members) - About $1000/month</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="col-md-6">
+                        <div class="form-group">
+                            <label for="rn-url">Free Rock Ninja Url</label>
+                            <div class="input-group mb-3">
+                                <input id="rn-url" name="rn-url" type="text" class="form-control" placeholder="mychurch">
+                                <div class="input-group-append">
+                                    <span class="input-group-text">.therock.ninja</span>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <h6 class="text-center text-muted" role="button" data-toggle="collapse" data-target="#advanced-options" aria-expanded="false"
+                    aria-controls="advanced-options">
+                    Advanced Options
+                    <i class="fas fa-caret-down"></i>
+                    <i class="fas fa-caret-up"></i>
+                </h6>
+
+                <section id="advanced-options" class="collapse">
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="az-resource-group">Resource Group</label>
+                                <select id="az-resource-group" name="az-resource-group" class="custom-select">
+                                    <option value="-1" selected>Create New</option>
+                                    <option value="1">Preexisting Group 1</option>
+                                    <option value="2">Preexisting Group 2</option>
+                                    <option value="3">Preexisting Group 3</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="az-resource-group-name">New Resource Group Name</label>
+                                <input id="az-resource-group-name" name="az-resource-group-name" type="text" class="form-control" placeholder="rock-mychurch">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="row">
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="az-storage-account">Storage Account</label>
+                                <select id="az-storage-account" name="az-storage-account" class="custom-select">
+                                    <option value="-1" selected>Create New</option>
+                                    <option value="1">Preexisting Group 1</option>
+                                    <option value="2">Preexisting Group 2</option>
+                                    <option value="3">Preexisting Group 3</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="col-md-6">
+                            <div class="form-group">
+                                <label for="az-storage-account-name">New Storage Account Url</label>
+                                <div class="input-group mb-3">
+                                    <input id="az-storage-account-name" name="az-storage-account-name" type="text" class="form-control" placeholder="mychurch">
+                                    <div class="input-group-append">
+                                        <span class="input-group-text">.blob.core.windows.net</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                </section>
+
+                <hr/>
+
+                <div class="clearfix">
+                    <a id="rn-btn-back" href="#" class="btn btn-secondary float-left">Back</a>
+                    <a id="rn-btn-back" href="#" class="btn btn-success float-right">Continue</a>
+                </div>
+
+            </div>
+        </div>
+        <!-- End Main Body -->
+
+    </div>
+    <!-- End Main Container -->
+
+    <!-- Optional JavaScript -->
+    <!-- jQuery first, then Popper.js, then Bootstrap JS -->
+    <script src="https://code.jquery.com/jquery-3.2.1.slim.min.js" integrity="sha384-KJ3o2DKtIkvYIK3UENzmM7KCkRr/rE9/Qpg6aAZGJwFDMVNA/GpGFF93hXpG5KkN"
+        crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q"
+        crossorigin="anonymous"></script>
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl"
+        crossorigin="anonymous"></script>
+</body>
+
+</html>

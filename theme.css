@@ -1,0 +1,65 @@
+
+/* HTML Overrides & Tweeks */
+
+body {
+    background-color: hsl(0, 0%, 16%);
+}
+
+[role=button] {
+    cursor: pointer;
+}
+
+[data-toggle=collapse][aria-expanded=false] .fa-caret-up,
+[data-toggle=collapse][aria-expanded=true] .fa-caret-down {
+    display: none;
+}
+
+
+/* Bootstrap Overrides & Tweaks */
+
+.collapse {
+    overflow: hidden;
+}
+
+@media (min-width: 992px) {
+    .form-group {
+        padding: 0.5em;
+    }
+}
+
+
+/* NinjaBox Component */
+
+.ninjabox {
+    border-radius: 1em;
+    background-color: hsl(0, 0%, 24%);
+    color: white;
+    padding: 0;
+}
+
+.ninjabox hr {
+    border-color: hsl(0, 0%, 40%);
+}
+
+.ninjabox .ninjabox-header {
+    border-radius: 1em 1em 0 0;
+    background-color: hsl(0, 0%, 8%);
+    text-align: center;
+    padding: 2em;
+}
+
+.ninjabox .ninjabox-body {
+    padding: 2em;
+}
+
+.ninjabox .text-muted {
+    color: hsl(0, 0%, 64%) !important;
+}
+
+
+/* FontAwesome 5 Custom Animations */
+
+.faa-pulse-slow {
+    -webkit-animation: fa-spin 1.5s infinite steps(8);
+    animation: fa-spin 1.5s infinite steps(8);
+}
