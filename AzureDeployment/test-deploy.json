@@ -1,0 +1,49 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "0.0.0.1",
+    "parameters": {
+    },
+    "variables": {
+    },
+    "resources": [
+        {
+            "comments": "A test storage account.",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2017-10-01",
+            "name": "storage-account-test",
+            "sku": {
+                "name": "Standard_RAGRS"
+            },
+            "kind": "StorageV2",
+            "location": "eastus",
+            "properties": {
+                "customDomain": {
+                    "name": "viervboabvpiuav"
+                },
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [
+                    ],
+                    "ipRules": [
+                    ],
+                    "defaultAction": "Deny"
+                },
+                "accessTier": "Hot",
+                "supportsHttpsTrafficOnly": true
+            }
+        }
+    ],
+    "outputs": {
+    }
+}

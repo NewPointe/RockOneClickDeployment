@@ -1,0 +1,349 @@
+{
+    "$schema": "http://schema.management.azure.com/schemas/2015-01-01/deploymentTemplate.json#",
+    "contentVersion": "0.0.0.1",
+    "parameters": {
+        "siteLocation": {
+            "type": "string"
+        },
+        "sku": {
+            "type": "string",
+            "defaultValue": "Small",
+            "allowedValues": [
+                "Tiny",
+                "Small",
+                "Medium",
+                "Large",
+                "Huge"
+            ],
+            "metadata": {
+                "description": "The size of rock server you want."
+            }
+        },
+        "adminUsername": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The admin username to use for different parts of the Rock deployment."
+            }
+        },
+        "adminPassword": {
+            "type": "securestring",
+            "metadata": {
+                "description": "The admin password to use for different parts of the Rock deployment."
+            }
+        }
+    },
+    "variables": {
+        "windowsServerType": {
+            "desktop": "2016-Datacenter-smalldisk",
+            "core": "2016-Datacenter-Server-Core-smalldisk"
+        },
+        "windowsServerSize": {
+            "tiny": "Standard_B1ms"
+        },
+        "credentials": {
+            "username": "asdf",
+            "password": "asdf"
+        },
+        "namingPrefix": "rock-08e5d49dd101",
+        "names": {
+            "vm":         "[concat(variables('namingPrefix'), '-vm')]",
+            "vm_disk":    "[concat(variables('namingPrefix'), '-vm-osdisk')]",
+            "vm_nic":     "[concat(variables('namingPrefix'), '-vm-nic')]",
+            "vm_host":    "Rock-VM",
+            "storage":    "[replace(variables('namingPrefix'), '-', '')]",
+            "nsg":        "[concat(variables('namingPrefix'), '-nsg')]",
+            "nic_ipconf": "[concat(variables('namingPrefix'), '-nic-ipconf')]",
+            "vn":         "[concat(variables('namingPrefix'), '-vn')]",
+            "vn_subnet":  "[concat(variables('namingPrefix'), '-vn-subnet')]",
+            "ipv4":       "[concat(variables('namingPrefix'), '-ipv4')]",
+            "rsv":        "[concat(variables('namingPrefix'), '-rsv')]",
+            "sql":        "[concat(variables('namingPrefix'), '-sql')]",
+            "sql_db":     "[concat(variables('namingPrefix'), '-sql-db')]"
+        }
+    },
+    "resources": [
+        {
+            "comments": "Virtual Machine for running Rock on IIS.",
+            "type": "Microsoft.Compute/virtualMachines",
+            "apiVersion": "2017-03-30",
+            "name": "[variables('names').vm]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "hardwareProfile": {
+                    "vmSize": "[variables('windowsServerSize').tiny]"
+                },
+                "storageProfile": {
+                    "imageReference": {
+                        "publisher": "MicrosoftWindowsServer",
+                        "offer": "WindowsServer",
+                        "sku": "[variables('windowsServerType').core]",
+                        "version": "latest"
+                    },
+                    "osDisk": {
+                        "osType": "Windows",
+                        "name": "[variables('names').vm_disk]",
+                        "createOption": "FromImage",
+                        "caching": "ReadWrite",
+                        "managedDisk": {
+                            "storageAccountType": "Premium_LRS"
+                        },
+                        "diskSizeGB": 31
+                    },
+                    "dataDisks": []
+                },
+                "osProfile": {
+                    "computerName": "Rock-VM",
+                    "adminUsername": "[variables('generalCredentials').username]",
+                    "adminPassword": "[variables('generalCredentials').password]",
+                    "windowsConfiguration": {
+                        "provisionVMAgent": true,
+                        "enableAutomaticUpdates": true
+                    }
+                },
+                "networkProfile": {
+                    "networkInterfaces": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/networkInterfaces', variables('names').vm_nic)]",
+                            "properties": {
+                                "primary": true
+                            }
+                        }
+                    ]
+                },
+                "diagnosticsProfile": {
+                    "bootDiagnostics": {
+                        "enabled": true,
+                        "storageUri": "[concat('https', '://', variables('names').storage, '.blob.core.windows.net', '/')]"
+                    }
+                }
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkInterfaces', variables('names').vm_nic)]",
+                "[resourceId('Microsoft.Storage/storageAccounts',  variables('names').storage)]"
+            ]
+        },
+        {
+            "comments": "NIC for the Rock VM.",
+            "type": "Microsoft.Network/networkInterfaces",
+            "apiVersion": "2017-10-01",
+            "name": "[variables('names').vm_nic]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "virtualMachine": {
+                    "id": "[resourceId('Microsoft.Compute/virtualMachines', variables('names').vm)]"
+                },
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('names').nsg)]"
+                },
+                "ipConfigurations": [
+                    {
+                        "name": "[variables('names').nic_ipconf]",
+                        "properties": {
+                            "privateIPAddress": "10.0.0.5",
+                            "privateIPAllocationMethod": "Static",
+                            "privateIPAddressVersion": "IPv4",
+                            "subnet": {
+                                "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('names').vn, variables('names').vn_subnet)]"
+                            },
+                            "primary": true,
+                            "publicIPAddress": {
+                                "id": "[resourceId('Microsoft.Network/publicIPAddresses', variables('names').ipv4)]"
+                            }
+                        }
+                    }
+                ],
+                "primary": true,
+                "enableAcceleratedNetworking": false,
+                "enableIPForwarding": false
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/publicIPAddresses', variables('names').ipv4)]",
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('names').vn, variables('names').vn_subnet)]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('names').nsg)]"
+            ]
+        },
+        {
+            "comments": "Network Security Group for the Rock network.",
+            "type": "Microsoft.Network/networkSecurityGroups",
+            "apiVersion": "2017-10-01",
+            "name": "[variables('names').nsg]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "securityRules": [
+                    {
+                        "name": "AllowInternetInbound",
+                        "properties": {
+                            "description": "Allows inbound internet traffic (HTTP on port 80 and HTTPS on port 443).",
+                            "protocol": "Tcp",
+                            "sourcePortRange": "*",
+                            "destinationPortRanges": ["80", "443"],
+                            "sourceAddressPrefix": "*",
+                            "destinationAddressPrefix": "*",
+                            "access": "Allow",
+                            "priority": 200,
+                            "direction": "Inbound"
+                        }
+                    }
+                ]
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Public ipv4 address for the Rock server.",
+            "type": "Microsoft.Network/publicIPAddresses",
+            "apiVersion": "2017-10-01",
+            "name": "[variables('names').ipv4]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "Basic"
+            },
+            "properties": {
+                "publicIPAllocationMethod": "Static",
+                "publicIPAddressVersion": "IPv4",
+                "dnsSettings": {
+                    "domainNameLabel": "[variables('namingPrefix')]"
+                },
+                "idleTimeoutInMinutes": 4
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Virtual Network for Rock.",
+            "type": "Microsoft.Network/virtualNetworks",
+            "apiVersion": "2017-10-01",
+            "name": "[variables('names').vn]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "addressSpace": {
+                    "addressPrefixes": [
+                        "10.0.0.0/16"
+                    ]
+                },
+                "subnets": [
+                    {
+                        "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('names').vn, variables('names').vn_subnet)]"
+                    }
+                ],
+                "virtualNetworkPeerings": [],
+                "enableDdosProtection": false,
+                "enableVmProtection": false
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('names').nsg)]"
+            ]
+        },
+        {
+            "comments": "Recovery Services Vault for Rock Backups.",
+            "type": "Microsoft.RecoveryServices/vaults",
+            "apiVersion": "2017-07-01",
+            "name": "[variables('names').rsv]",
+            "location": "[resourceGroup().location]",
+            "sku": {
+                "name": "RS0",
+                "tier": "Standard"
+            },
+            "properties": {},
+            "dependsOn": []
+        },
+        {
+            "comments": "Azure SQL Server for Rock.",
+            "type": "Microsoft.Sql/servers",
+            "apiVersion": "2015-05-01-preview",
+            "name": "[variables('names').sql]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "administratorLogin": "[variables('credentials').username]",
+                "administratorLoginPassword": "[variables('credentials').password]",
+                "version": "12.0"
+            },
+            "dependsOn": []
+        },
+        {
+            "comments": "Storage Account for Rock data.",
+            "type": "Microsoft.Storage/storageAccounts",
+            "apiVersion": "2017-10-01",
+            "name": "[variables('names').storage]",
+            "sku": {
+                "name": "Standard_RAGRS"
+            },
+            "kind": "StorageV2",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "encryption": {
+                    "services": {
+                        "file": {
+                            "enabled": true
+                        },
+                        "blob": {
+                            "enabled": true
+                        }
+                    },
+                    "keySource": "Microsoft.Storage"
+                },
+                "networkAcls": {
+                    "bypass": "AzureServices",
+                    "virtualNetworkRules": [
+                        {
+                            "id": "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('names').vn, variables('names').vn_subnet)]",
+                            "action": "Allow"
+                        }
+                    ],
+                    "ipRules": [
+                    ],
+                    "defaultAction": "Deny"
+                },
+                "accessTier": "Hot",
+                "supportsHttpsTrafficOnly": true
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks/subnets', variables('names').vn, variables('names').vn_subnet)]"
+            ]
+        },
+        {
+            "comments": "Subnet for Rock's Virtual Network.",
+            "type": "Microsoft.Network/virtualNetworks/subnets",
+            "name": "[concat(variables('names').vn, '/', variables('names').vn_subnet)]",
+            "apiVersion": "2017-10-01",
+            "properties": {
+                "addressPrefix": "10.0.0.0/24",
+                "networkSecurityGroup": {
+                    "id": "[resourceId('Microsoft.Network/networkSecurityGroups', variables('names').nsg)]"
+                },
+                "serviceEndpoints": [
+                    {
+                        "service": "Microsoft.Sql",
+                        "locations": [
+                            "[resourceGroup().location]"
+                        ]
+                    },
+                    {
+                        "service": "Microsoft.Storage",
+                        "locations": [
+                            "[resourceGroup().location]"
+                        ]
+                    }
+                ]
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Network/virtualNetworks', variables('names').vn)]",
+                "[resourceId('Microsoft.Network/networkSecurityGroups', variables('names').nsg)]"
+            ]
+        },
+        {
+            "comments": "The Rock database.",
+            "type": "Microsoft.Sql/servers/databases",
+            "apiVersion": "2014-04-01-preview",
+            "name": "[concat(variables('names').sql, '/', variables('names').sql_db)]",
+            "location": "[resourceGroup().location]",
+            "properties": {
+                "collation": "SQL_Latin1_General_CP1_CI_AS",
+                "edition": "Basic",
+                "maxSizeBytes": "2147483648"
+            },
+            "dependsOn": [
+                "[resourceId('Microsoft.Sql/servers', variables('names').sql)]"
+            ]
+        }
+    ],
+    "outputs": {}
+}
