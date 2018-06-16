@@ -1,47 +1,71 @@
 {
-  "name": "therock.ninja",
-  "version": "1.0.0",
-  "description": "",
-  "main": "dist/app.js",
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
-  },
-  "repository": {
-    "type": "git",
-    "url": "git+https://github.com/NewPointe/therock.ninja.git"
-  },
-  "author": "tschrock <tschrock123@gmail.com>",
-  "license": "ISC",
-  "bugs": {
-    "url": "https://github.com/NewPointe/therock.ninja/issues"
-  },
-  "homepage": "https://github.com/NewPointe/therock.ninja#readme",
-  "dependencies": {
-    "body-parser": "^1.18.3",
-    "cookie-parser": "^1.4.3",
-    "debug": "^3.1.0",
-    "express": "^4.16.3",
-    "morgan": "^1.9.0",
-    "mysql2": "^1.5.3",
-    "passport": "^0.4.0",
-    "pug": "^2.0.3",
-    "reflect-metadata": "^0.1.12",
-    "sequelize": "^4.37.10",
-    "sequelize-typescript": "^0.6.5",
-    "serve-favicon": "^2.5.0"
-  },
-  "devDependencies": {
-    "@types/body-parser": "^1.17.0",
-    "@types/cookie-parser": "^1.4.1",
-    "@types/debug": "0.0.30",
-    "@types/express": "^4.16.0",
-    "@types/morgan": "^1.7.35",
-    "@types/node": "^10.3.2",
-    "@types/passport": "^0.4.5",
-    "@types/serve-favicon": "^2.2.30",
-    "gulp": "^4.0.0",
-    "tslint": "^5.10.0",
-    "tslint-language-service": "^0.9.9",
-    "typescript": "^2.9.1"
-  }
+    "name": "therock.ninja",
+    "version": "0.0.1-prealpha",
+    "description": "",
+    "main": "dist/app.js",
+    "scripts": {
+        "build": "tsc",
+        "lint": "tslint --project .",
+        "start": "npm run build && node dist/app.js",
+        "test": "mocha -r ts-node/register tests/*.ts"
+    },
+    "repository": "github:NewPointe/therock.ninja",
+    "author": {
+        "name": "Tyler Schrock",
+        "email": "tschrock123@gmail.com",
+        "url": "https://github.com/tschrock"
+    },
+    "license": "MPL-2.0",
+    "bugs": {
+        "url": "https://github.com/NewPointe/therock.ninja/issues"
+    },
+    "homepage": "https://github.com/NewPointe/therock.ninja#readme",
+    "engines": {
+        "node": ">=9.0.0"
+    },
+    "dependencies": {
+        "body-parser": "^1.18.3",
+        "cookie-parser": "^1.4.3",
+        "debug": "^3.1.0",
+        "express": "^4.16.3",
+        "express-session": "^1.15.6",
+        "http-errors": "^1.6.3",
+        "morgan": "^1.9.0",
+        "mysql2": "^1.5.3",
+        "passport": "^0.4.0",
+        "passport-azure-ad": "^3.0.12",
+        "passport-oauth2": "^1.4.0",
+        "pug": "^2.0.3",
+        "reflect-metadata": "^0.1.12",
+        "sequelize": "^4.37.10",
+        "sequelize-typescript": "^0.6.6-beta.1",
+        "serve-favicon": "^2.5.0",
+        "sqlite3": "^4.0.0",
+        "yargs": "^11.0.0"
+    },
+    "devDependencies": {
+        "@types/body-parser": "^1.17.0",
+        "@types/chai": "^4.1.4",
+        "@types/chai-as-promised": "^7.1.0",
+        "@types/cookie-parser": "^1.4.1",
+        "@types/debug": "0.0.30",
+        "@types/express": "^4.16.0",
+        "@types/express-session": "^1.15.10",
+        "@types/http-errors": "^1.6.1",
+        "@types/mocha": "^5.2.2",
+        "@types/morgan": "^1.7.35",
+        "@types/node": "^10.3.2",
+        "@types/passport": "^0.4.5",
+        "@types/passport-oauth2": "^1.4.5",
+        "@types/serve-favicon": "^2.2.30",
+        "@types/yargs": "^11.0.0",
+        "chai": "^4.1.2",
+        "chai-as-promised": "^7.1.1",
+        "gulp": "^4.0.0",
+        "mocha": "^5.2.0",
+        "ts-node": "^6.1.1",
+        "tslint": "^5.10.0",
+        "tslint-language-service": "^0.9.9",
+        "typescript": "^2.9.1"
+    }
 }

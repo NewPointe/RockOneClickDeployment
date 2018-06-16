@@ -1,0 +1,22 @@
+{
+    "db": {
+        "dialect": "mysql|sqlite|postgres|mssql",
+        "host": "localhost",
+        "port": 3306,
+        "database": "database",
+        "username": "username",
+        "password": "password",
+        "storage": "path/to/database.sqlite (only for sqlite)"
+    },
+    "web": {
+        "port": 8080,
+        "sessionSecret": "32char secret"
+    },
+    "oauth": {
+        "authorizationURL": "https://login.microsoftonline.com/common/oauth2/authorize",
+        "tokenURL": "https://login.windows.net/common/oauth2/token",
+        "clientID": "client id",
+        "clientSecret": "client secret",
+        "callbackURL": "https://example.com/auth/microsoft/callback"
+    }
+}

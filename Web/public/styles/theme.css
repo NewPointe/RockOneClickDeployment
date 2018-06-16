@@ -1,0 +1,39 @@
+html { box-sizing: border-box; }
+*, *:before, *:after { box-sizing: inherit; }
+
+
+html {
+    height: 100%;
+    margin: 0;
+    background-color: #222;
+    padding: 20px;
+    font-family: Helvetica Neue, Helvetica, Arial, sans-serif;
+    color: #fff;
+}
+
+body {
+    max-width: 800px;
+    margin: auto;
+    background-color: #333;
+    border-radius: 5px;
+}
+
+h1, h2, h3, h4, h5, h6 {
+    font-family: "Helvetica Neue", Helvetica, Arial, sans-serif;
+    font-weight: 400;
+}
+
+header {
+    padding: 20px;
+    background-color: #151515;
+    border-radius: 5px 5px 0 0;
+    text-align: center;
+}
+main {
+    padding: 25px;
+}
+
+
+.text-center {
+    text-align: center;
+}

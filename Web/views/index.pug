@@ -1,4 +1,14 @@
-extends layout/main
+extends layout/workflow
+
+block heading
+        h1 The Rock Ninja
 
 block content
-    h1 Hello World
+    if user
+        h4 Hello #{user.displayName}!
+        a(href="/logout") Logout
+    else
+        .text-center
+            p To continue, please sign in with your Microsoft account and allow access to your Azure Subscription.
+            a(href="/login")
+                img(src="/img/login-white.svg")
