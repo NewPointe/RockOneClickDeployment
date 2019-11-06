@@ -37,7 +37,7 @@
         "passport-oauth2": "^1.4.0",
         "pug": "^2.0.3",
         "reflect-metadata": "^0.1.12",
-        "sequelize": "^4.37.10",
+        "sequelize": "^5.15.1",
         "sequelize-typescript": "^0.6.6-beta.1",
         "serve-favicon": "^2.5.0",
         "sqlite3": "^4.0.0",
