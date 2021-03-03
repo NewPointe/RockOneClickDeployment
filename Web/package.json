@@ -35,7 +35,7 @@
         "passport": "^0.4.0",
         "passport-azure-ad": "^3.0.12",
         "passport-oauth2": "^1.4.0",
-        "pug": "^2.0.3",
+        "pug": "^3.0.1",
         "reflect-metadata": "^0.1.12",
         "sequelize": "^4.37.10",
         "sequelize-typescript": "^0.6.6-beta.1",
